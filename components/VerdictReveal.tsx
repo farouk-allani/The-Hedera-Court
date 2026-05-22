@@ -39,9 +39,10 @@ export function VerdictReveal({ caseData }: { caseData: PublicCase }) {
     <div className="court-panel overflow-hidden bg-cream/95">
       <div className="relative overflow-hidden border-b border-brass/70 p-5 md:p-7">
         <Image
-          src="/generated/verdict-cards-bg.png"
+          src="/generated/verdict-cards-bg.jpg"
           alt="Verdict cards on a court desk"
           fill
+          quality={76}
           sizes="(max-width: 768px) 100vw, 720px"
           className="object-cover object-center opacity-70"
         />

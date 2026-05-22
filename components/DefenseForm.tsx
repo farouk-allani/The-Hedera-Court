@@ -62,9 +62,10 @@ export function DefenseForm({ caseData, onCaseUpdated }: DefenseFormProps) {
     <div className="court-panel overflow-hidden bg-cream">
       <div className="relative h-32 border-b border-brass/70">
         <Image
-          src="/generated/evidence-collage.png"
+          src="/generated/evidence-collage.jpg"
           alt="Court papers awaiting a defense"
           fill
+          quality={76}
           sizes="(max-width: 768px) 100vw, 520px"
           className="object-cover object-[18%_58%]"
         />

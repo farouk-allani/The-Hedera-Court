@@ -58,9 +58,10 @@ export default function CasePage({ params }: { params: { caseId: string } }) {
       <main className="mx-auto max-w-4xl px-4 py-12 md:px-8">
         <div className="court-panel relative min-h-72 overflow-hidden p-8">
           <Image
-            src="/generated/evidence-collage.png"
+            src="/generated/evidence-collage.jpg"
             alt=""
             fill
+            quality={76}
             sizes="100vw"
             className="object-cover opacity-25"
           />
@@ -92,9 +93,10 @@ export default function CasePage({ params }: { params: { caseId: string } }) {
       <section className="court-panel docket-lines overflow-hidden">
         <div className="relative h-44 border-b border-brass/70">
           <Image
-            src="/generated/evidence-collage.png"
+            src="/generated/evidence-collage.jpg"
             alt="Case papers"
             fill
+            quality={76}
             sizes="(max-width: 768px) 100vw, 480px"
             className="object-cover object-left"
           />
@@ -128,9 +130,10 @@ export default function CasePage({ params }: { params: { caseId: string } }) {
         {caseData.status === "ruling" ? (
           <div className="court-panel relative flex min-h-[420px] items-center justify-center overflow-hidden p-8 text-center">
             <Image
-              src="/magpie-portrait.png"
+              src="/magpie-portrait.jpg"
               alt=""
               fill
+              quality={78}
               sizes="(max-width: 768px) 100vw, 620px"
               className="object-cover opacity-25"
             />
@@ -141,10 +144,11 @@ export default function CasePage({ params }: { params: { caseId: string } }) {
                 transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
               >
                 <Image
-                  src="/magpie-portrait.png"
+                  src="/magpie-portrait.jpg"
                   alt="Justice Magpie"
                   width={112}
                   height={112}
+                  quality={78}
                   className="h-full w-full object-cover"
                 />
               </motion.div>

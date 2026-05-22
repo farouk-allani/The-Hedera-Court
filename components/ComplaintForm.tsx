@@ -64,9 +64,10 @@ export function ComplaintForm({ treasuryId }: { treasuryId: string }) {
     <section className="court-panel relative overflow-hidden bg-cream/95">
       <div className="relative h-36 border-b border-brass/70">
         <Image
-          src="/generated/evidence-collage.png"
+          src="/generated/evidence-collage.jpg"
           alt="Court evidence desk"
           fill
+          quality={76}
           sizes="(max-width: 768px) 100vw, 520px"
           className="object-cover object-[55%_62%]"
         />

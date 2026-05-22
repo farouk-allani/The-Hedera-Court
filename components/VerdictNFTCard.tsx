@@ -17,9 +17,10 @@ export function VerdictNFTCard({ caseData, side }: VerdictNFTCardProps) {
   return (
     <article className="relative overflow-hidden border border-brass bg-cream p-4 shadow-paper transition-transform duration-200 hover:-translate-y-1">
       <Image
-        src="/generated/verdict-cards-bg.png"
+        src="/generated/verdict-cards-bg.jpg"
         alt=""
         fill
+        quality={76}
         sizes="320px"
         className="object-cover opacity-[0.14]"
       />

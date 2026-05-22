@@ -6,10 +6,11 @@ export default function DocketPage() {
     <main className="mx-auto w-full max-w-6xl px-4 py-8 md:px-8 md:py-12">
       <div className="court-panel relative mb-8 min-h-72 overflow-hidden p-6 md:p-8">
         <Image
-          src="/generated/evidence-collage.png"
+          src="/generated/evidence-collage.jpg"
           alt="Public docket evidence desk"
           fill
           priority
+          quality={76}
           sizes="100vw"
           className="object-cover object-center"
         />

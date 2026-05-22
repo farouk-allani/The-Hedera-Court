@@ -9,10 +9,11 @@ export function CourtHero({ treasuryId }: { treasuryId: string }) {
   return (
     <section className="relative min-h-[calc(100vh-73px)] overflow-hidden border-b border-brass/70">
       <Image
-        src="/generated/court-hero-illustration.png"
+        src="/generated/court-hero-illustration.jpg"
         alt="Justice Magpie presiding in an old English law library"
         fill
         priority
+        quality={78}
         sizes="100vw"
         className="object-cover object-center"
       />
@@ -26,7 +27,7 @@ export function CourtHero({ treasuryId }: { treasuryId: string }) {
         transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
       >
         <Image
-          src="/generated/court-gavel.png"
+          src="/generated/court-gavel-small.png"
           alt=""
           fill
           sizes="176px"
@@ -54,10 +55,11 @@ export function CourtHero({ treasuryId }: { treasuryId: string }) {
           </p>
           <div className="mt-8 flex max-w-2xl items-center gap-4 border-l border-brass/80 pl-4">
             <Image
-              src="/magpie-portrait.png"
+              src="/magpie-portrait.jpg"
               alt="Justice Magpie"
               width={96}
               height={96}
+              quality={78}
               className="h-24 w-24 border border-brass object-cover shadow-paper"
             />
             <p className="text-lg leading-6">
