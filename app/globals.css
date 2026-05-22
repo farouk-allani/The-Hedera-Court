@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #f4ecd8;
+  --oxblood: #6b1c1c;
+  --ink: #1c1614;
+  --brass: #8a6d3b;
+  --moss: #4a5a3a;
+  --shadow: #0e0a08;
+  --cream-rgb: 244 236 216;
+  --oxblood-rgb: 107 28 28;
+  --ink-rgb: 28 22 20;
+  --brass-rgb: 138 109 59;
+  --moss-rgb: 74 90 58;
+  --shadow-rgb: 14 10 8;
+  --font-body: Constantia;
+  --font-display: "Palatino Linotype";
+  --font-plaque: "Copperplate Gothic Light";
+  --font-verdict: "IBM Plex Mono";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--cream);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image:
+    url("/paper-grain.svg"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32' viewBox='0 0 120 32'%3E%3Cpath d='M0 31.5H120' stroke='%231c1614' stroke-opacity='.06'/%3E%3C/svg%3E");
+  background-size:
+    220px 220px,
+    100% 32px;
+  font-family: var(--font-body), Georgia, serif;
+  letter-spacing: 0;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  content: "";
+  background-image: url("/generated/court-library-bg.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.13;
+  filter: sepia(0.3);
+}
+
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background: rgba(244, 236, 216, 0.82);
+}
+
+::selection {
+  color: var(--cream);
+  background: var(--oxblood);
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 3px;
+}
+
+.court-panel {
+  border: 1px solid rgba(138, 109, 59, 0.7);
+  border-radius: 4px;
+  background: rgba(244, 236, 216, 0.88);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 16px 36px rgba(14, 10, 8, 0.12);
+}
+
+.docket-lines {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='34' viewBox='0 0 96 34'%3E%3Cpath d='M0 33.5H96' stroke='%238a6d3b' stroke-opacity='.16'/%3E%3Cpath d='M.5 0V34' stroke='%236b1c1c' stroke-opacity='.14'/%3E%3C/svg%3E");
+  background-size:
+    96px 34px;
+}
+
+.small-caps {
+  font-family: var(--font-plaque), "Palatino Linotype", Georgia, serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
