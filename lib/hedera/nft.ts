@@ -2,7 +2,7 @@ import type { HydratedDocument } from "mongoose";
 import { Hbar, TokenMintTransaction, TransferTransaction } from "@hiero-ledger/sdk";
 import type { ICase } from "@/lib/db/models/Case";
 import { getHederaClient } from "@/lib/hedera/client";
-import { appendAgentKitAudit, touchAgentKit } from "@/lib/hedera/agent";
+import { appendAgentKitAudit, runAgentTool, touchAgentKit } from "@/lib/hedera/agent";
 import { isMockHederaAllowed } from "@/lib/utils";
 
 type CaseDoc = HydratedDocument<ICase>;
@@ -65,7 +65,7 @@ export async function mintVerdictNft(
 }
 
 export async function payWinner(caseDoc: CaseDoc) {
-  const agentKit = await touchAgentKit("hbar:payout");
+  const action = "hbar:payout";
 
   const winner = caseDoc.verdict?.winner;
   const winnerAccount =
@@ -79,7 +79,7 @@ export async function payWinner(caseDoc: CaseDoc) {
   if (isMockHederaAllowed() || !treasury) {
     const txId = `demo-payout-${caseDoc.caseId}-${Date.now()}`;
     appendAgentKitAudit(caseDoc, {
-      ...agentKit,
+      ...(await touchAgentKit(action)),
       label: "Winner payout prepared as an HBAR transfer",
       service: "HBAR",
       txId,
@@ -88,6 +88,29 @@ export async function payWinner(caseDoc: CaseDoc) {
     return txId;
   }
 
+  // Primary path: the autonomous court clerk settles the winner payout from the court
+  // treasury through the Hedera Agent Kit's transfer_hbar_tool. amount is in whole HBAR
+  // (0.95), matching the SDK fallback's 95,000,000 tinybars. Only treasury funds move
+  // here; player wallets always sign their own antes in HashPack.
+  try {
+    const result = await runAgentTool(action, "transfer_hbar_tool", {
+      transfers: [{ accountId: winnerAccount, amount: 0.95 }],
+      sourceAccountId: treasury,
+      transactionMemo: `The Hedera Court payout ${caseDoc.caseId}`
+    });
+    appendAgentKitAudit(caseDoc, {
+      ...result.touch,
+      label: "Winner payout sent as an HBAR transfer",
+      service: "HBAR",
+      txId: result.txId,
+      occurredAt: new Date()
+    });
+    return result.txId as string;
+  } catch (err) {
+    console.warn("Agent Kit HBAR payout failed; falling back to SDK.", err);
+  }
+
+  // Fallback: deterministic SDK transfer so a slow or unavailable kit never strands a payout.
   const client = getHederaClient();
   const response = await new TransferTransaction()
     .addHbarTransfer(treasury, Hbar.fromTinybars(-95_000_000))
@@ -97,7 +120,7 @@ export async function payWinner(caseDoc: CaseDoc) {
   await response.getReceipt(client);
   const txId = response.transactionId.toString();
   appendAgentKitAudit(caseDoc, {
-    ...agentKit,
+    ...(await touchAgentKit(action)),
     label: "Winner payout sent as an HBAR transfer",
     service: "HBAR",
     txId,

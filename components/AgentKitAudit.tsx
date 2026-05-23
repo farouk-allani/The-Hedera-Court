@@ -43,10 +43,20 @@ export function AgentKitAudit({ caseData }: { caseData: PublicCase }) {
                 {action.service}
               </span>
               <div>
-                <p className="font-verdict text-ink">{action.label}</p>
+                <p className="font-verdict text-ink">
+                  {action.label}
+                  {action.executed ? (
+                    <span className="ml-2 inline-flex h-5 items-center border border-moss/70 px-1.5 align-middle small-caps text-[10px] text-moss">
+                      executed
+                    </span>
+                  ) : null}
+                </p>
                 <p className="mt-1 font-verdict text-xs text-ink/65">
-                  {action.action} / {action.toolCount} Agent Kit tools /{" "}
-                  {action.autonomous ? "autonomous" : "manual"}
+                  {action.executed && action.toolName
+                    ? `${action.toolName} / executed by Agent Kit / ${action.toolCount} tools loaded`
+                    : `${action.action} / ${action.toolCount} Agent Kit tools / ${
+                        action.autonomous ? "autonomous" : "manual"
+                      }`}
                 </p>
               </div>
               {action.hashscanUrl ? (

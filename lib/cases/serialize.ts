@@ -86,6 +86,8 @@ function serializeAgentKitActions(actions: unknown[]): PublicAgentKitAction[] {
         service?: unknown;
         txId?: unknown;
         autonomous?: unknown;
+        executed?: unknown;
+        toolName?: unknown;
         toolCount?: unknown;
         occurredAt?: { toISOString?: () => string } | string;
       };
@@ -104,6 +106,8 @@ function serializeAgentKitActions(actions: unknown[]): PublicAgentKitAction[] {
         txId,
         hashscanUrl: txId ? hashscanTransactionUrl(txId) : undefined,
         autonomous: entry.autonomous !== false,
+        executed: entry.executed === true,
+        toolName: typeof entry.toolName === "string" ? entry.toolName : undefined,
         toolCount: Number(entry.toolCount ?? 0),
         occurredAt:
           typeof entry.occurredAt === "string"

@@ -93,6 +93,8 @@ const CaseSchema = new Schema(
         service: String,
         txId: String,
         autonomous: Boolean,
+        executed: Boolean,
+        toolName: String,
         toolCount: Number,
         occurredAt: Date
       }

@@ -15,6 +15,8 @@ export type PublicAgentKitAction = {
   txId?: string;
   hashscanUrl?: string;
   autonomous: boolean;
+  executed: boolean;
+  toolName?: string;
   toolCount: number;
   occurredAt?: string;
 };

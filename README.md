@@ -4,15 +4,17 @@ Justice Magpie has reviewed another tiny civic disaster and, against all reasona
 
 ## Demo Video
 
-X demo video: `TODO: add public demo video link`
+X (Twitter) demo: https://x.com/farouk_allani/status/2058173831596974344
+
+YouTube demo: https://youtu.be/UobR1VAPQHU
 
 ## Live App
 
-Vercel deployment: `TODO: add deployed app link`
+Live deployment: https://hederacourt.site/
 
 ## Public GitHub
 
-Public repository: `TODO: add GitHub repo URL`
+Public repository: https://github.com/farouk-allani/The-Hedera-Court
 
 ## What The App Does
 
@@ -26,16 +28,25 @@ The joke is simple: the dispute is petty, but the receipts are serious. The UI f
 
 ## Hedera Agent Kit
 
-The server includes Hedera Agent Kit JS in the autonomous ruling pipeline. The pipeline initializes the Agent Kit tool surface in `AgentMode.AUTONOMOUS` before server-side Hedera actions, while deterministic SDK transactions are used for exact transaction IDs and resumable state updates. This keeps the human-in-the-loop boundary clear: users approve their own wallet transfers, and the server performs limited court actions with audit links.
+The autonomous court clerk runs on the **Hedera Agent Kit JS** (`@hashgraph/hedera-agent-kit` + `@hashgraph/hedera-agent-kit-langchain`). The kit is initialized with `allCorePlugins` in `AgentMode.AUTONOMOUS`, and its tools genuinely build, sign, and submit the court's own server-side transactions, returning real transaction IDs:
 
-Each case stores a public Agent Kit trace for the autonomous court actions: HCS case filing, HCS defense filing, HTS verdict NFT mints, HBAR winner payout, and HCS verdict publication. The verdict page and public docket show the trace beside the HashScan receipts so reviewers can see the Agent Kit path during the demo.
+- **HCS docket messages** — `CASE_FILED`, `DEFENSE_FILED`, and `VERDICT` are submitted through the kit's `submit_topic_message_tool`.
+- **HBAR winner payout** — the 0.95 testnet HBAR settlement from the court treasury to the winner runs through the kit's `transfer_hbar_tool`.
+
+That is four real on-chain actions executed by the Agent Kit per ruling. Each one is stored in a public Agent Kit trace (with the tool name and an `executed` marker), shown on the verdict page and the public docket beside its HashScan receipt, so reviewers can confirm the kit path during the demo.
+
+**Where the kit is not used, and why.** The verdict NFT mint stays on the deterministic `@hiero-ledger/sdk` because the kit's generic execute strategy does not surface the newly minted **serial number** in its structured response, and the app needs that serial for the NFT card, metadata, and docket. This is documented as bounty feedback (see `docs/feedback.md`).
+
+**Safety boundary.** Only the server-controlled court treasury moves through the agent. The two player payments (the plaintiff and defendant antes) are always signed by the user in HashPack — they are never routed through the agent. This makes it impossible for the agent to use or drain a user's funds without explicit consent.
+
+**Resilience.** If a kit tool call fails or times out mid-demo, each action falls back to the equivalent deterministic SDK transaction, so a ruling never stalls. The trace records whether each action was kit-executed or fell back.
 
 Relevant files:
 
-- `lib/hedera/agent.ts`
-- `lib/hedera/docket.ts`
-- `lib/hedera/nft.ts`
-- `lib/court/ruling-pipeline.ts`
+- `lib/hedera/agent.ts` — toolkit init + `runAgentTool()` (real tool execution and tx-id parsing)
+- `lib/hedera/docket.ts` — HCS messages via `submit_topic_message_tool`
+- `lib/hedera/nft.ts` — HBAR payout via `transfer_hbar_tool`; SDK NFT mint
+- `lib/court/ruling-pipeline.ts` — resumable ruling pipeline
 
 ## Hedera Services Used
 
@@ -193,11 +204,9 @@ See `docs/demo-script.md`.
 
 ## Bounty Feedback
 
-The Hedera Agent Kit would benefit from a complete human-in-the-loop demo that combines wallet-signed user payments, server-side autonomous agent actions, HCS messages, HTS NFT minting, and HashScan links in one small reference app.
+Concrete feedback found while building this app: the Agent Kit's `mint_non_fungible_token_tool` executes the mint, but the generic execute strategy returns only `status`, `transactionId`, `tokenId`, and `topicId` — it does **not** surface the newly minted NFT **serial number(s)** from the receipt. Apps that mint and then reference, transfer, or display a specific NFT have to fall back to the raw SDK (or a follow-up Mirror Node query) to recover the serial. Returning `serials` in the mint tool's structured response would let the kit fully own the HTS mint path. Full write-up in [`docs/feedback.md`](./docs/feedback.md).
 
-For bounty builders, the hardest part is not calling one tool. The hard part is designing a safe flow where the user explicitly approves their own transaction, then the agent performs limited server-side actions with clear auditability.
-
-A reference example for this pattern would help developers build fun commercial or social agents without accidentally creating unsafe autonomous fund movement.
+Broader feedback: the kit would benefit from a complete human-in-the-loop reference app that combines wallet-signed user payments, server-side autonomous agent actions (HCS, HBAR), and HashScan links — the hard part for builders is not calling one tool, it is designing a safe flow where the user explicitly approves their own transaction and the agent performs only limited, auditable server-side actions without unsafe autonomous fund movement.
 
 ## License
 
